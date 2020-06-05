@@ -59,7 +59,7 @@ const render = function () {
   if (store.hideCheckedItems) {
     items = items.filter(item => !item.checked);
   }
-  
+
   /**
    * At this point, all filtering work has been 
    * done (or not done, if that's the current settings), 
@@ -171,36 +171,14 @@ const editItemNameOnDatabase = function(id) {
   toggleEditItem(id);
 }
 
-/*
-const handleEditItemSubmission = function (id) {
-  console.log(`Hello`)
+const handleEditItemSubmission = function () {
   $('.js-shopping-list').on('submit', 'form', event => {
-  event.preventDefault();
-  editItemNameOnDatabase(id)
-  render();
-  })
-}
-*/
-
-const enableEditItemSubmission = function (id) {
-  $('.js-shopping-list').on('submit', 'form', event => {
-    event.preventDefault();
-    editItemNameOnDatabase(id);
-    render();
-  })
-}
-
-/*
-const handleEditItemClicked = function () {
-  $('.js-shopping-list').on('click', '.js-item-edit', event => {
     event.preventDefault();
     const id = getItemIdFromElement(event.currentTarget);
-    toggleEditItem(id);
-    handleEditItemSubmission(id);
+    editItemNameOnDatabase(id)
     render();
-    });
-};
-*/
+  })
+}
 
  const handleEditItemClicked = function () {
    $('.js-shopping-list').on('click', '.js-item-edit', event => {
@@ -208,9 +186,9 @@ const handleEditItemClicked = function () {
      const id = getItemIdFromElement(event.currentTarget);
      toggleEditItem(id);
      render();
-     enableEditItemSubmission(id);
    });
  };
+
 
 /**
  * This function will be our callback when the
@@ -228,7 +206,7 @@ const handleShoppingList = function () {
   handleDeleteItemClicked();
   handleToggleFilterClick();
   handleEditItemClicked();
-  //handleEditItemSubmission();
+  handleEditItemSubmission();
 };
 
 // when the page loads, call `handleShoppingList`
