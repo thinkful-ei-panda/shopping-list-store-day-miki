@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Andrea's Bookmark App
 
 This is an application to collect your favorite bookmarks.
