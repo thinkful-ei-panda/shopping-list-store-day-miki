@@ -1,11 +1,11 @@
 const store = {
   items: [
-    { id: cuid(), name: 'apples', checked: false },
-    { id: cuid(), name: 'oranges', checked: false },
-    { id: cuid(), name: 'milk', checked: true },
-    { id: cuid(), name: 'bread', checked: false }
+    { id: cuid(), name: 'apples', checked: false, edit: false },
+    { id: cuid(), name: 'oranges', checked: false, edit: false },
+    { id: cuid(), name: 'milk', checked: true, edit: false },
+    { id: cuid(), name: 'bread', checked: false, edit: false }
   ],
-  hideCheckedItems: false
+  hideCheckedItems: false,
 };
 
 const generateItemElement = function (item) {
@@ -13,6 +13,12 @@ const generateItemElement = function (item) {
   if (!item.checked) {
     itemTitle = `
      <span class='shopping-item'>${item.name}</span>
+    `;
+  }
+
+  if (item.edit) {
+    itemTitle = `
+    <form><input type="text" name="edit-shopping-list-item" placeholder="Input new name" required=""></input><button class="shopping-item-save" type="submit">Save</button></form>
     `;
   }
 
@@ -26,6 +32,9 @@ const generateItemElement = function (item) {
         <button class='shopping-item-delete js-item-delete'>
           <span class='button-label'>delete</span>
         </button>
+        <button type="submit" class='shopping-item-edit js-item-edit'>
+        <span class='button-label'>edit</span>
+      </button>
       </div>
     </li>`;
 };
@@ -146,6 +155,42 @@ const handleToggleFilterClick = function () {
 };
 
 /**
+ * Responsible for editing an item name
+ * @param {string} id
+ */
+
+const toggleEditItem = function (id) {
+  const foundEditItem = store.items.find(item => item.id === id)
+  foundEditItem.edit = !foundEditItem.edit;
+}
+
+
+const editItemNameOnDatabase = function(id) {
+  const foundEditItem = store.items.find(item => item.id === id)
+  foundEditItem.name = $('[name="edit-shopping-list-item"]').val();
+  toggleEditItem(id);
+}
+
+const handleEditItemSubmission = function () {
+  $('.js-shopping-list').on('submit', 'form', event => {
+    event.preventDefault();
+    const id = getItemIdFromElement(event.currentTarget);
+    editItemNameOnDatabase(id)
+    render();
+  })
+}
+
+ const handleEditItemClicked = function () {
+   $('.js-shopping-list').on('click', '.js-item-edit', event => {
+     event.preventDefault();
+     const id = getItemIdFromElement(event.currentTarget);
+     toggleEditItem(id);
+     render();
+   });
+ };
+
+
+/**
  * This function will be our callback when the
  * page loads. It is responsible for initially 
  * rendering the shopping list, then calling 
@@ -160,6 +205,8 @@ const handleShoppingList = function () {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleToggleFilterClick();
+  handleEditItemClicked();
+  handleEditItemSubmission();
 };
 
 // when the page loads, call `handleShoppingList`
